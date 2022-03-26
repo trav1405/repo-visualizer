@@ -12,24 +12,24 @@ import {
   scaleSqrt,
   timeFormat,
 } from "d3";
-import { FileType } from "./types";
+import { FileType } from "../utils/types";
 import countBy from "lodash/countBy";
 import maxBy from "lodash/maxBy";
 import entries from "lodash/entries";
 import uniqBy from "lodash/uniqBy";
 import flatten from "lodash/flatten";
 // file colors are from the github/linguist repo
-import fileColors from "./language-colors.json";
+import fileColors from "../config/language-colors.json";
 import { CircleText } from "./CircleText";
 import {
   keepBetween,
   keepCircleInsideCircle,
   truncateString,
-} from "./utils";
+} from "../utils/utils";
 
 type Props = {
   data: FileType;
-  filesChanged: string[];
+  filesChanged?: string[];
   maxDepth: number;
   colorEncoding: "type" | "number-of-changes" | "last-change"
 };
@@ -264,7 +264,7 @@ export const Tree = (
         if (data.label.length > r * 0.5) return null;
 
         const label = truncateString(
-          data.label,
+          data.path,
           r < 30 ? Math.floor(r / 2.7) + 3 : 100,
         );
 
@@ -315,8 +315,9 @@ export const Tree = (
         }
 
         const label = isHighlighted
-          ? data.label
-          : truncateString(data.label, Math.floor(r / 4) + 3);
+          ? data.path
+          : truncateString(data.path, Math.floor(r / 4) + 3);
+      
 
         return (
           <g

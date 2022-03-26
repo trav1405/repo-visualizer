@@ -18884,7 +18884,7 @@ var Tree = ({ data, filesChanged = [], maxDepth = 9, colorEncoding = "type" }) =
       return null;
     if (data2.label.length > r4 * 0.5)
       return null;
-    const label = truncateString(data2.label, r4 < 30 ? Math.floor(r4 / 2.7) + 3 : 100);
+    const label = truncateString(data2.path, r4 < 30 ? Math.floor(r4 / 2.7) + 3 : 100);
     let offsetR = r4 + 12 - depth * 4;
     const fontSize = 16 - depth;
     return /* @__PURE__ */ import_react2.default.createElement("g", {
@@ -18923,7 +18923,7 @@ var Tree = ({ data, filesChanged = [], maxDepth = 9, colorEncoding = "type" }) =
     if (!(isHighlighted || !doHighlight && !selectedNode && r4 > 22)) {
       return null;
     }
-    const label = isHighlighted ? data2.label : truncateString(data2.label, Math.floor(r4 / 4) + 3);
+    const label = isHighlighted ? data2.path : truncateString(data2.path, Math.floor(r4 / 4) + 3);
     return /* @__PURE__ */ import_react2.default.createElement("g", {
       key: data2.path,
       style: {
@@ -19181,7 +19181,8 @@ var getSortOrder = (item, cachedOrders, i = 0) => {
 
 // src/config.ts
 var config = {
-  rootPath: "../../GitHistoryVisualiser"
+  rootPath: "../Gource",
+  excludedPathsString: "node_modules,bower_components,dist,out,build,eject,.next,.netlify,.yarn,.git,.vscode,package-lock.json,yarn.lock"
 };
 
 // src/index.jsx
@@ -19194,17 +19195,17 @@ var main = async () => {
   const excludedGlobsString = config.excludedGlobsString || "";
   const excludedGlobs = excludedGlobsString.split(";");
   const data = await processDir(rootPath, excludedPaths, excludedGlobs);
+  const startTime = Date.now();
   const componentCodeString = import_server.default.renderToStaticMarkup(/* @__PURE__ */ import_react3.default.createElement(Tree, {
     data,
     maxDepth: +maxDepth,
     colorEncoding
   }));
+  console.log(Date.now() - startTime);
   const outputFile = "./diagram.svg";
   await import_fs2.default.writeFileSync(outputFile, componentCodeString);
 };
-main().catch((e3) => {
-  console.log("failed");
-});
+main();
 /*
 object-assign
 (c) Sindre Sorhus
